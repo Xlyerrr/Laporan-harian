@@ -3,8 +3,12 @@ import { Pressable, Text, View } from 'react-native';
 import { styles } from '../styles/styles';
 import { formatRupiah } from '../utils/currency';
 
-export const TransactionItem = ({ item, onDelete }) => (
-  <Pressable onLongPress={() => onDelete(item.id)} style={styles.transactionItem}>
+export const TransactionItem = ({ item, onDelete, onEdit }) => (
+  <Pressable
+    onLongPress={() => onDelete(item.id)}
+    onPress={() => onEdit(item)}
+    style={styles.transactionItem}
+  >
     <View
       style={
         item.type === 'income'
@@ -25,7 +29,7 @@ export const TransactionItem = ({ item, onDelete }) => (
       <Text style={item.type === 'income' ? styles.incomeText : styles.expenseText}>
         {item.type === 'income' ? '+' : '-'} {formatRupiah(item.amount)}
       </Text>
-      <Text style={styles.deleteHint}>Tahan untuk hapus</Text>
+      <Text style={styles.deleteHint}>Ketuk edit, tahan hapus</Text>
     </View>
   </Pressable>
 );

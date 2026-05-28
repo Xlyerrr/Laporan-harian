@@ -6,17 +6,21 @@ import { styles } from '../styles/styles';
 export const TransactionForm = ({
   amount,
   category,
+  isEditing,
   note,
   onAmountChange,
+  onCancelEdit,
   onCategoryChange,
   onNoteChange,
   onSave,
   onTypeChange,
   type,
 }) => (
-  <View style={styles.panel}>
+  <View style={[styles.panel, isEditing && styles.editingPanel]}>
     <View style={styles.sectionHeader}>
-      <Text style={styles.sectionTitle}>Tambah transaksi</Text>
+      <Text style={styles.sectionTitle}>
+        {isEditing ? 'Edit transaksi' : 'Tambah transaksi'}
+      </Text>
       <Text style={type === 'income' ? styles.typeBadgeIncome : styles.typeBadgeExpense}>
         {type === 'income' ? 'Masuk' : 'Keluar'}
       </Text>
@@ -78,7 +82,15 @@ export const TransactionForm = ({
     </View>
 
     <Pressable onPress={onSave} style={styles.primaryButton}>
-      <Text style={styles.primaryButtonText}>+ Simpan transaksi</Text>
+      <Text style={styles.primaryButtonText}>
+        {isEditing ? 'Simpan perubahan' : '+ Simpan transaksi'}
+      </Text>
     </Pressable>
+
+    {isEditing && (
+      <Pressable onPress={onCancelEdit} style={styles.secondaryButton}>
+        <Text style={styles.secondaryButtonText}>Batal edit</Text>
+      </Pressable>
+    )}
   </View>
 );

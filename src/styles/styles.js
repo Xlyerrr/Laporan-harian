@@ -72,6 +72,10 @@ export const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 2,
   },
+  editingPanel: {
+    borderColor: '#FCA311',
+    borderWidth: 2,
+  },
   sectionHeader: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -131,6 +135,12 @@ export const styles = StyleSheet.create({
     color: '#C43D32',
     fontSize: 24,
     fontWeight: '900',
+  },
+  balanceStatus: {
+    color: '#527166',
+    fontSize: 13,
+    fontWeight: '800',
+    marginTop: 6,
   },
   summaryGrid: {
     flexDirection: 'row',
@@ -246,6 +256,19 @@ export const styles = StyleSheet.create({
   primaryButtonText: {
     color: '#FFFFFF',
     fontSize: 16,
+    fontWeight: '900',
+  },
+  secondaryButton: {
+    minHeight: 46,
+    borderRadius: 8,
+    borderColor: '#C9D6DF',
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  secondaryButtonText: {
+    color: '#49616D',
+    fontSize: 15,
     fontWeight: '900',
   },
   listTitle: {
@@ -391,4 +414,114 @@ export const styles = StyleSheet.create({
     color: '#647780',
     marginTop: 4,
   },
+  chartPeakText: {
+    color: '#C43D32',
+    fontSize: 12,
+    fontWeight: '900',
+  },
+  chartStatsRow: {
+    borderBottomColor: '#EEF3F6',
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    gap: 18,
+    paddingBottom: 12,
+  },
+  chartStat: {
+    flex: 1,
+    gap: 4,
+  },
+  chartStatLabel: {
+    color: '#647780',
+    fontSize: 11,
+    fontWeight: '800',
+    textTransform: 'uppercase',
+  },
+  chartStatValue: {
+    color: '#172126',
+    fontSize: 16,
+    fontWeight: '900',
+  },
+  heatList: {
+    backgroundColor: '#F8FBFC',
+    borderColor: '#E4ECEF',
+    borderRadius: 8,
+    borderWidth: 1,
+    marginTop: 4,
+    gap: 6,
+    padding: 10,
+  },
+  heatRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 10,
+    minHeight: 34,
+  },
+  heatDateWrap: {
+    width: 42,
+  },
+  heatDate: {
+    color: '#647780',
+    fontSize: 11,
+    fontWeight: '900',
+  },
+  heatDatePeak: {
+    color: '#C43D32',
+  },
+  heatTrack: {
+    backgroundColor: '#EDF2F4',
+    borderRadius: 999,
+    flex: 1,
+    height: 22,
+    justifyContent: 'center',
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  heatBar: {
+    backgroundColor: '#E07A70',
+    borderRadius: 999,
+    height: '100%',
+    minWidth: 0,
+  },
+  heatBarPeak: {
+    backgroundColor: '#C43D32',
+  },
+  heatValueWrap: {
+    alignItems: 'flex-end',
+    width: 76,
+  },
+  heatValue: {
+    color: '#172126',
+    fontSize: 11,
+    fontWeight: '900',
+  },
+  heatValueMuted: {
+    color: '#B1BDC3',
+  },
+  heatPeakBadge: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 999,
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+    position: 'absolute',
+    right: 4,
+  },
+  heatPeakBadgeText: {
+    color: '#C43D32',
+    fontSize: 9,
+    fontWeight: '900',
+  },
+  heatEmptyNotice: {
+    backgroundColor: '#FFFFFF',
+    borderColor: '#E4ECEF',
+    borderRadius: 8,
+    borderWidth: 1,
+    padding: 10,
+  },
+  heatEmptyText: {
+    color: '#87969D',
+    fontSize: 10,
+    fontWeight: '800',
+    textAlign: 'center',
+  },
+
 });

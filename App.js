@@ -19,6 +19,7 @@ import { transactionsToCsv } from './src/utils/csv';
 import { today } from './src/utils/date';
 import {
   createTransaction,
+  getDailyExpenseChartData,
   getDailyTransactions,
   getTransactionTotals,
   parseAmount,
@@ -46,10 +47,16 @@ export default function App() {
   const [note, setNote] = useState('');
   const [category, setCategory] = useState(categories.expense[0]);
   const [selectedDate, setSelectedDate] = useState(today());
+  const [editingTransactionId, setEditingTransactionId] = useState(null);
 
   const dailyTransactions = useMemo(
     () => getDailyTransactions(transactions, selectedDate),
     [selectedDate, transactions]
+  );
+
+  const expenseChartData = useMemo(
+    () => getDailyExpenseChartData(transactions, selectedDate),
+    [transactions, selectedDate]
   );
 
   const exportCsv = async () => {
@@ -99,6 +106,12 @@ export default function App() {
     setCategory(categories[nextType][0]);
   };
 
+  const resetForm = () => {
+    setAmount('');
+    setNote('');
+    setEditingTransactionId(null);
+  };
+
   const saveTransaction = () => {
     const cleanAmount = parseAmount(amount);
     const isValidDate = /^\d{4}-\d{2}-\d{2}$/.test(selectedDate);
@@ -113,6 +126,26 @@ export default function App() {
       return;
     }
 
+    if (editingTransactionId) {
+      setTransactions((current) =>
+        current.map((transaction) =>
+          transaction.id === editingTransactionId
+            ? {
+                ...transaction,
+                type,
+                amount: cleanAmount,
+                category,
+                date: selectedDate,
+                note: note.trim() || 'Tanpa catatan',
+                updatedAt: new Date().toISOString(),
+              }
+            : transaction
+        )
+      );
+      resetForm();
+      return;
+    }
+
     const newTransaction = createTransaction({
       type,
       amount: cleanAmount,
@@ -122,8 +155,20 @@ export default function App() {
     });
 
     setTransactions((current) => [newTransaction, ...current]);
-    setAmount('');
-    setNote('');
+    resetForm();
+  };
+
+  const editTransaction = (transaction) => {
+    setEditingTransactionId(transaction.id);
+    setType(transaction.type);
+    setCategory(transaction.category);
+    setSelectedDate(transaction.date);
+    setAmount(String(transaction.amount));
+    setNote(transaction.note === 'Tanpa catatan' ? '' : transaction.note);
+  };
+
+  const cancelEdit = () => {
+    resetForm();
   };
 
   const deleteTransaction = (id) => {
@@ -141,7 +186,11 @@ export default function App() {
   };
 
   const renderTransaction = ({ item }) => (
-    <TransactionItem item={item} onDelete={deleteTransaction} />
+    <TransactionItem
+      item={item}
+      onDelete={deleteTransaction}
+      onEdit={editTransaction}
+    />
   );
 
   return (
@@ -159,13 +208,16 @@ export default function App() {
             <ReportHeader
               amount={amount}
               category={category}
+              chartData={expenseChartData}
               onAmountChange={setAmount}
               onCategoryChange={setCategory}
               onDateChange={setSelectedDate}
               onExportCsv={exportCsv}
               onNoteChange={setNote}
               onSave={saveTransaction}
+              onCancelEdit={cancelEdit}
               onTypeChange={changeType}
+              isEditing={Boolean(editingTransactionId)}
               note={note}
               selectedDate={selectedDate}
               totals={totals}

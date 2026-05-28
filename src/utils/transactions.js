@@ -29,3 +29,43 @@ export const getTransactionTotals = (transactions) =>
     },
     { income: 0, expense: 0, balance: 0 }
   );
+
+export const getDailyExpenseChartData = (transactions, selectedDate) => {
+  const isValidDate =
+    /^\d{4}-\d{2}-\d{2}$/.test(selectedDate) &&
+    !Number.isNaN(new Date(`${selectedDate}T00:00:00`).getTime());
+
+  if (!isValidDate) {
+    return {
+      labels: [],
+      datasets: [
+        {
+          data: [0],
+        },
+      ],
+    };
+  }
+
+  const endDate = new Date(`${selectedDate}T00:00:00`);
+
+  const days = Array.from({ length: 7 }, (_, index) => {
+    const date = new Date(endDate);
+    date.setDate(endDate.getDate() - (6 - index));
+    return date.toISOString().slice(0, 10);
+  });
+
+  const expenseData = days.map((date) =>
+    transactions
+      .filter((item) => item.date === date && item.type === 'expense')
+      .reduce((total, item) => total + item.amount, 0)
+  );
+
+  return {
+    labels: days.map((date) => date.slice(5)),
+    datasets: [
+      {
+        data: expenseData,
+      },
+    ],
+  };
+};

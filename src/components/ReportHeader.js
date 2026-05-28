@@ -3,18 +3,23 @@ import { Pressable, Text, TextInput, View } from 'react-native';
 import { styles } from '../styles/styles';
 import { ReportSummary } from './ReportSummary';
 import { TransactionForm } from './TransactionForm';
+import { TransactionChart } from './TransactionChart';
+
 
 export const ReportHeader = ({
   amount,
   category,
   note,
+  chartData,
   onAmountChange,
   onCategoryChange,
+  onCancelEdit,
   onDateChange,
   onExportCsv,
   onNoteChange,
   onSave,
   onTypeChange,
+  isEditing,
   selectedDate,
   totals,
   transactionCount,
@@ -46,11 +51,15 @@ export const ReportHeader = ({
       <ReportSummary totals={totals} />
     </View>
 
+    <TransactionChart chartData={chartData} />
+
     <TransactionForm
       amount={amount}
       category={category}
+      isEditing={isEditing}
       note={note}
       onAmountChange={onAmountChange}
+      onCancelEdit={onCancelEdit}
       onCategoryChange={onCategoryChange}
       onNoteChange={onNoteChange}
       onSave={onSave}
