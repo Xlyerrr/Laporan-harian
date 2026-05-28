@@ -21,6 +21,7 @@ import {
   createTransaction,
   getDailyExpenseChartData,
   getDailyTransactions,
+  getExportTransactions,
   getTransactionTotals,
   parseAmount,
 } from './src/utils/transactions';
@@ -47,6 +48,7 @@ export default function App() {
   const [note, setNote] = useState('');
   const [category, setCategory] = useState(categories.expense[0]);
   const [selectedDate, setSelectedDate] = useState(today());
+  const [exportPeriod, setExportPeriod] = useState('daily');
   const [editingTransactionId, setEditingTransactionId] = useState(null);
 
   const dailyTransactions = useMemo(
@@ -60,41 +62,53 @@ export default function App() {
   );
 
   const exportCsv = async () => {
-  if (dailyTransactions.length === 0) {
-    Alert.alert('Belum ada data', 'Tambahkan transaksi sebelum mengekspor ke csv.');
-    return;
-  }
+    const exportTransactions = getExportTransactions(
+      transactions,
+      selectedDate,
+      exportPeriod
+    );
 
-  const csv = transactionsToCsv(dailyTransactions);
-  const fileName = `laporan-harian-${selectedDate}.csv`;
-
-  if (Platform.OS === 'web') {
-    downloadCsvOnWeb(csv, fileName);
-    return;
-  }
-
-  if (Platform.OS === 'android') {
-    const permissions =
-      await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
-
-    if (!permissions.granted) {
-      Alert.alert('Dibatalkan', 'Folder penyimpanan belum dipilih.');
+    if (exportTransactions.length === 0) {
+      Alert.alert('Belum ada data', 'Tidak ada transaksi untuk periode export ini.');
       return;
     }
 
-    const fileUri = await FileSystem.StorageAccessFramework.createFileAsync(
-      permissions.directoryUri,
-      fileName,
-      'text/csv'
-    );
+    const periodLabel = {
+      daily: 'harian',
+      weekly: 'mingguan',
+      monthly: 'bulanan',
+    }[exportPeriod];
 
-    await FileSystem.writeAsStringAsync(fileUri, `\uFEFF${csv}`, {
-      encoding: FileSystem.EncodingType.UTF8,
-    });
+    const csv = transactionsToCsv(exportTransactions);
+    const fileName = `laporan-${periodLabel}-${selectedDate}.csv`;
 
-    Alert.alert('Berhasil', `File ${fileName} berhasil disimpan.`);
-  }
-};
+    if (Platform.OS === 'web') {
+      downloadCsvOnWeb(csv, fileName);
+      return;
+    }
+
+    if (Platform.OS === 'android') {
+      const permissions =
+        await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+
+      if (!permissions.granted) {
+        Alert.alert('Dibatalkan', 'Folder penyimpanan belum dipilih.');
+        return;
+      }
+
+      const fileUri = await FileSystem.StorageAccessFramework.createFileAsync(
+        permissions.directoryUri,
+        fileName,
+        'text/csv'
+      );
+
+      await FileSystem.writeAsStringAsync(fileUri, `\uFEFF${csv}`, {
+        encoding: FileSystem.EncodingType.UTF8,
+      });
+
+      Alert.alert('Berhasil', `File ${fileName} berhasil disimpan.`);
+    }
+  };
 
   const totals = useMemo(
     () => getTransactionTotals(dailyTransactions),
@@ -209,10 +223,12 @@ export default function App() {
               amount={amount}
               category={category}
               chartData={expenseChartData}
+              exportPeriod={exportPeriod}
               onAmountChange={setAmount}
               onCategoryChange={setCategory}
               onDateChange={setSelectedDate}
               onExportCsv={exportCsv}
+              onExportPeriodChange={setExportPeriod}
               onNoteChange={setNote}
               onSave={saveTransaction}
               onCancelEdit={cancelEdit}

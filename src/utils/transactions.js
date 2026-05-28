@@ -69,3 +69,30 @@ export const getDailyExpenseChartData = (transactions, selectedDate) => {
     ],
   };
 };
+
+export const getExportTransactions = (transactions, selectedDate, period) => {
+  if (period === 'daily') {
+    return transactions.filter((transaction) => transaction.date === selectedDate);
+  }
+
+  if (period === 'weekly') {
+    const endDate = new Date(`${selectedDate}T00:00:00`);
+    const startDate = new Date(endDate);
+    startDate.setDate(endDate.getDate() - 6);
+
+    return transactions.filter((transaction) => {
+      const transactionDate = new Date(`${transaction.date}T00:00:00`);
+      return transactionDate >= startDate && transactionDate <= endDate;
+    });
+  }
+
+  if (period === 'monthly') {
+    const monthKey = selectedDate.slice(0, 7);
+
+    return transactions.filter((transaction) =>
+      transaction.date.startsWith(monthKey)
+    );
+  }
+
+  return [];
+};
