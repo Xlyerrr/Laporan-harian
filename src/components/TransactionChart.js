@@ -1,6 +1,4 @@
-import { Text, View } from 'react-native';
-
-import { styles } from '../styles/styles';
+import { Pressable, Text, View } from 'react-native';
 import { formatRupiah } from '../utils/currency';
 
 const formatShortRupiah = (value) => {
@@ -15,7 +13,24 @@ const formatShortRupiah = (value) => {
   return formatRupiah(value);
 };
 
-export const TransactionChart = ({ chartData }) => {
+const periodOptions = [
+  { value: 'daily', label: 'Harian' },
+  { value: 'weekly', label: 'Mingguan' },
+  { value: 'monthly', label: 'Bulanan' },
+];
+
+const periodTitles = {
+  daily: 'Pengeluaran Harian',
+  weekly: 'Pengeluaran Mingguan',
+  monthly: 'Pengeluaran Bulanan',
+};
+
+export const TransactionChart = ({
+  styles,
+  chartData,
+  chartPeriod,
+  onChartPeriodChange,
+}) => {
   const labels = chartData?.labels?.length > 0 ? chartData.labels : ['-'];
   const values = chartData?.datasets?.[0]?.data ?? [0];
   const maxValue = Math.max(...values, 0);
@@ -27,8 +42,30 @@ export const TransactionChart = ({ chartData }) => {
   return (
     <View style={styles.panel}>
       <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>Heat Bar Pengeluaran</Text>
+        <Text style={styles.sectionTitle}>{periodTitles[chartPeriod]}</Text>
         <Text style={styles.chartPeakText}>Tertinggi {formatShortRupiah(maxValue)}</Text>
+      </View>
+
+      <View style={styles.chartPeriodWrap}>
+        {periodOptions.map((item) => (
+          <Pressable
+            key={item.value}
+            onPress={() => onChartPeriodChange(item.value)}
+            style={[
+              styles.chartPeriodButton,
+              chartPeriod === item.value && styles.chartPeriodButtonActive,
+            ]}
+          >
+            <Text
+              style={[
+                styles.chartPeriodText,
+                chartPeriod === item.value && styles.chartPeriodTextActive,
+              ]}
+            >
+              {item.label}
+            </Text>
+          </Pressable>
+        ))}
       </View>
 
       <View style={styles.chartStatsRow}>

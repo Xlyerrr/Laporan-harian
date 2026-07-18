@@ -1,6 +1,4 @@
 import { Text, View } from 'react-native';
-
-import { styles } from '../styles/styles';
 import { formatRupiah } from '../utils/currency';
 
 const getBalanceStatus = (balance) => {
@@ -15,7 +13,7 @@ const getBalanceStatus = (balance) => {
   return 'Pemasukan dan pengeluaran seimbang';
 };
 
-export const ReportSummary = ({ totals }) => {
+export const ReportSummary = ({ styles, totals }) => {
   const balanceStatus = getBalanceStatus(totals.balance);
 
   return (

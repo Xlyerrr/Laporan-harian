@@ -1,8 +1,6 @@
 import { Text, View } from 'react-native';
 
-import { styles } from '../styles/styles';
-
-export const EmptyState = () => (
+export const EmptyState = ({ styles }) => (
   <View style={styles.emptyState}>
     <View style={styles.emptyBadge}>
       <Text style={styles.emptyBadgeText}>0</Text>

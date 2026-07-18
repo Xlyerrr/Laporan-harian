@@ -1,9 +1,10 @@
 import { Pressable, Text, TextInput, View } from 'react-native';
 
 import { categories } from '../constants/categories';
-import { styles } from '../styles/styles';
+import { wallets } from '../constants/wallets';
 
 export const TransactionForm = ({
+  styles,
   amount,
   category,
   isEditing,
@@ -14,7 +15,9 @@ export const TransactionForm = ({
   onNoteChange,
   onSave,
   onTypeChange,
+  onWalletChange,
   type,
+  wallet,
 }) => (
   <View style={[styles.panel, isEditing && styles.editingPanel]}>
     <View style={styles.sectionHeader}>
@@ -73,6 +76,26 @@ export const TransactionForm = ({
             style={[
               styles.categoryText,
               category === item && styles.categoryTextActive,
+            ]}
+          >
+            {item}
+          </Text>
+        </Pressable>
+      ))}
+    </View>
+
+    <Text style={styles.inputLabel}>Wallet</Text>
+    <View style={styles.categoryWrap}>
+      {wallets.map((item) => (
+        <Pressable
+          key={item}
+          onPress={() => onWalletChange(item)}
+          style={[styles.categoryButton, wallet === item && styles.categoryActive]}
+        >
+          <Text
+            style={[
+              styles.categoryText,
+              wallet === item && styles.categoryTextActive,
             ]}
           >
             {item}

@@ -1,4 +1,4 @@
-const csvHeaders = ['Tanggal', 'Tipe', 'Kategori', 'Catatan', 'Nominal'];
+const csvHeaders = ['Tanggal', 'Tipe', 'Wallet', 'Kategori', 'Catatan', 'Nominal'];
 
 const escapeCsvValue = (value) => {
   const text = String(value ?? '');
@@ -9,6 +9,7 @@ export const transactionsToCsv = (transactions) => {
   const rows = transactions.map((transaction) => [
     transaction.date,
     transaction.type === 'income' ? 'Pemasukan' : 'Pengeluaran',
+    transaction.wallet || 'Tunai',
     transaction.category,
     transaction.note,
     transaction.amount,
